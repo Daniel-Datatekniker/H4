@@ -31,9 +31,8 @@ namespace Hash
             InitializeComponent();
             rng = new Rng();
             foreach (HashTypes htype in (HashTypes[])Enum.GetValues(typeof(HashTypes)))
-            {
                 SelectHash.Items.Add(htype);
-            }
+
             SelectHash.SelectionChanged += SelectHash_SelectionChanged1;
         }
 
@@ -45,9 +44,7 @@ namespace Hash
                 selectedType = (HashTypes)SelectHash.SelectedItem;
             }
             else
-            {
                 BtnComputeMac.IsEnabled = false;
-            }
         }
 
         private void BtnComputeMac_Click(object sender, RoutedEventArgs e)
@@ -56,23 +53,14 @@ namespace Hash
             {
                 Messenger.Content = "";
                 key = rng.KeyGenerator(Int32.Parse(InputKey.Text));
-
                 hmc = new Hmac(selectedType, key);
-
                 var computedResult = hmc.computeHmac(selectedType, hmc.EncodeUtf8(InputMsg.Text), key);
-
                 InputMacHex.Text = BitConverter.ToString(computedResult);
                 InputMacAsci.Text = Convert.ToBase64String(computedResult);
-
-               // var isOk = hmc.CheckAuthority(hmc.EncodeUtf8(InputMsg.Text), computedResult, key);
-               // Debug.WriteLine(computedResult);
-
                 BtnVerifyMac.IsEnabled = true;
             }
             else
-            {
                 BtnVerifyMac.IsEnabled = false;
-            }
         }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -86,13 +74,9 @@ namespace Hash
             {
                 byte[] nb = Convert.FromBase64String(InputMacAsci.Text);
                 if (hmc.CheckAuthority(hmc.EncodeUtf8(InputMsg.Text), nb, key))
-                {
                     Messenger.Content = "Authority is ok!";
-                }
                 else
-                {
                     Messenger.Content = "Authority is not ok...";
-                }
             }
         }
     }
